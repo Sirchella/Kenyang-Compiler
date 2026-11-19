@@ -1,0 +1,18 @@
+// Strings: variables, parameters, return values, escapes and the var keyword
+kʉ greet(bɛyɔŋ name) : bɛyɔŋ {
+    sɔ("hello");
+    piti name;
+}
+
+kʉ main() : ngwɔ {
+    bɛyɔŋ s = "Bayangi";
+    bɛyɔŋ empty;
+    sɔ(s);
+    sɔ(empty);
+    sɔ(greet("Kenyang"));
+    sɔ("tab\there \"quoted\"");
+    ŋati k = s;
+    sɔ(k);
+    ŋati f = 5 > 3;
+    sɔ(f);
+}

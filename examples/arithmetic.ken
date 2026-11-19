@@ -1,0 +1,15 @@
+// Arithmetic: priority of operators, division that cuts toward zero, big numbers
+kʉ main() : ngwɔ {
+    sɔ(2 + 3 * 4);
+    sɔ((2 + 3) * 4);
+    sɔ(17 / 5);
+    sɔ(17 % 5);
+    sɔ(-17 / 5);
+    sɔ(-17 % 5);
+    sɔ(10 - 3 - 2);
+    pɨ big = 9223372036854775807;
+    sɔ(big);
+    sɔ(0 - big - 1);
+    sɔ(7 == 7);
+    sɔ(3 < 2);
+}

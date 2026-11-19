@@ -1,0 +1,19 @@
+// Choosing between several cases with elif
+kʉ grade(pɨ score) : bɛyɔŋ {
+    yat (score >= 80) {
+        piti "A";
+    } rɔ_yat (score >= 60) {
+        piti "B";
+    } rɔ_yat (score >= 40) {
+        piti "C";
+    } rɔ {
+        piti "F";
+    }
+}
+
+kʉ main() : ngwɔ {
+    sɔ(grade(95));
+    sɔ(grade(70));
+    sɔ(grade(45));
+    sɔ(grade(10));
+}

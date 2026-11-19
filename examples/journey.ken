@@ -1,0 +1,5 @@
+// The smallest useful program. The explainer follows it through every stage.
+kʉ main() : ngwɔ {
+    pɨ x = 2 + 3 * 4;
+    sɔ(x);
+}

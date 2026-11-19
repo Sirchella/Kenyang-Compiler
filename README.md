@@ -65,19 +65,21 @@ kuh main() : ngwoh {
 ## Compiler Pipeline & Progress
 
 ```text
-  [.ken source] ──▶ [1. Lexer (Lark)] ──▶ [2. Parser & AST] ──▶ [3. Semantic Analyser]
-                          ✅ DONE               🔜 NEXT               ⏳ PLANNED
-                                                                            │
-  [Executable]  ◀── [6. Codegen & Runtime] ◀── [5. Optimiser] ◀── [4. IR / 3-Address]
-      ⏳ PLANNED           ⏳ PLANNED             ⏳ PLANNED            ⏳ PLANNED
+  [.ken source] --> [1. Lexer] --> [2. Parser & AST] --> [3. Semantic Analyser]
+                       done             done                   done
+                                                                |
+  [Executable] <-- [6. Codegen & Runtime] <-- [5. Optimiser] <-- [4. IR / 3-Address]
+      done               done                     done                 done
 ```
 
-| Area | Owner | Scope | Status |
-|---|---|---|---|
-| **Area 1** | Member 1 | Language Design, 70-Word Kenyang Lexicon, Lark Lexer | **Done** |
-| **Area 2** | Member 2 | Grammar, Parser, Abstract Syntax Tree (AST) | **Up Next** |
-| **Area 3** | Member 3 | Symbol Table, Semantic Analyser, Optimiser | Planned |
-| **Area 4** | Member 4 | Intermediate Code, Code Generator, Runtime | Planned |
+| Area | Scope | Status |
+|---|---|---|
+| **Area 1** | Language design, 70-word Kenyang lexicon, Lark lexer | Done |
+| **Area 2** | Grammar, recursive descent parser, syntax tree | Done |
+| **Area 3** | Symbol table, semantic analyser, optimiser | Done |
+| **Area 4** | Intermediate code, x86-64 code generator, runtime, virtual machine, command line | Done |
+
+167 automated tests pass. Optimised and unoptimised builds, and the native program and the virtual machine, give identical output on all 14 example programs. The compiler also supports decimal numbers, prints warnings for unused variables and unreachable code, and cleans up the generated assembly.
 
 ---
 
@@ -87,19 +89,42 @@ kuh main() : ngwoh {
 git clone https://github.com/Sirchella/Kenyang-Compiler.git
 cd Kenyang-Compiler
 pip install -r requirements.txt
-python -m pytest -v
+python -m pytest -q
 ```
 
-### Lexer CLI
+The native steps (assembler and linker) run through WSL on Windows (`wsl --install -d Ubuntu`) or directly on Linux. Without them, use `--interpret`.
+
+### Compile and run a program
 
 ```powershell
-# Validate all 70 Lower Kenyang keywords for zero collisions
+mkdir build
+
+# Build a native executable and run it
+python -m src.compiler examples/factorial_utf8.ken -o build/factorial --run
+
+# Run on the virtual machine (no assembler needed)
+python -m src.compiler examples/factorial_utf8.ken --interpret
+
+# Show the result of one stage: tokens, ast, ir, ir-opt, asm
+python -m src.compiler examples/journey.ken --emit ir-opt --stats
+
+# Turn the optimiser off
+python -m src.compiler examples/journey.ken --no-opt --emit asm
+```
+
+Errors are reported with file, line, column and a hint, for example:
+
+```text
+SemanticError [semantic_error.ken:14:8]: 'cuont' is not declared
+    14 |     sɔ(cuont);
+       |        ^
+  hint: Did you mean 'count'?
+```
+
+### Lexer tools
+
+```powershell
 python -m src.lexer --check-keywords
-
-# Tokenize a program (line:col, token type, lexeme)
-python -m src.lexer examples/factorial_utf8.ken
-
-# Export token stream as JSON (handover format for Member 2)
 python -m src.lexer examples/factorial_utf8.ken --json
 ```
 
@@ -109,14 +134,23 @@ python -m src.lexer examples/factorial_utf8.ken --json
 
 | Path | Description |
 |---|---|
-| [`src/lexer.py`](src/lexer.py) | Lark-backed lexer with tone-diacritic normalization & multi-error recovery |
-| [`grammar/kenyang.lark`](grammar/kenyang.lark) | Lexical grammar supporting UTF-8 Lower Kenyang & ASCII fallback |
-| [`keywords.json`](keywords.json) | Machine-readable table of 70 Lower Kenyang keywords (`CORE`, `STANDARD`, `EXTENDED`) |
-| [`tests/test_lexer.py`](tests/test_lexer.py) | Automated `pytest` suite (9 tests covering keywords, tones, recovery, CLI) |
-| [`examples/`](examples/) | Sample `.ken` programs (`factorial`, `fibonacci`, `gcd`, `prime_check`) |
-| [`docs/handover-area-2.md`](docs/handover-area-2.md) | Plain-English handover guide for Member 2 (Parser & AST) |
-| [`docs/language-spec.md`](docs/language-spec.md) | Language specification, operator precedence, and EBNF grammar |
-| [`docs/kenyang-research-dossier.md`](docs/kenyang-research-dossier.md) | Linguistic bibliography (19 sources), AGLC alphabet, and Unicode rules |
-| [`docs/speaker-keywords-master.md`](docs/speaker-keywords-master.md) | Full 70-keyword reference table with lexicon citations |
+| [`src/lexer.py`](src/lexer.py) | Lark-backed lexer with tone-mark removal and multi-error recovery |
+| [`src/parser.py`](src/parser.py), [`src/ast_nodes.py`](src/ast_nodes.py) | Recursive descent parser and syntax tree |
+| [`src/semantic.py`](src/semantic.py) | Symbol table, type checking, error messages |
+| [`src/ir.py`](src/ir.py) | Three-address intermediate code |
+| [`src/optimiser.py`](src/optimiser.py) | Constant folding, value passing, dead code removal, jump clean-up |
+| [`src/codegen.py`](src/codegen.py) | x86-64 assembly generator and assembly runtime |
+| [`src/toolchain.py`](src/toolchain.py) | Calls the assembler and linker (through WSL on Windows) |
+| [`src/interpreter.py`](src/interpreter.py) | Virtual machine for the intermediate code |
+| [`src/compiler.py`](src/compiler.py) | Command line that joins all stages |
+| [`grammar/kenyang.lark`](grammar/kenyang.lark) | Lexical grammar for UTF-8 Lower Kenyang and the ASCII fallback |
+| [`keywords.json`](keywords.json) | The 70 Lower Kenyang keywords (`CORE`, `STANDARD`, `EXTENDED`) |
+| [`tests/`](tests/) | 167 `pytest` tests for every stage and end to end |
+| [`examples/`](examples/) | 14 sample programs, and `errors/` with programs that contain mistakes or warnings |
+| [`docs/project-explainer.md`](docs/project-explainer.md) | Plain-language explanation of the whole project |
+| [`docs/demo-guide.md`](docs/demo-guide.md) | Step-by-step script for the demonstration |
+| [`docs/language-spec.md`](docs/language-spec.md) | Language specification (v0.2) |
+| [`docs/kenyang-research-dossier.md`](docs/kenyang-research-dossier.md) | Linguistic bibliography, alphabet and Unicode rules |
+| [`docs/speaker-keywords-master.md`](docs/speaker-keywords-master.md) | Full 70-keyword reference table with citations |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Branching rules, Git workflow, and PR checklist |
 | [`project-plan.md`](project-plan.md) | Overall 4-member semester project plan |

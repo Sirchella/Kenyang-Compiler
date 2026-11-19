@@ -1,0 +1,26 @@
+// Loops: for with continue and break, and a while loop (Collatz steps for 27)
+kʉ main() : ngwɔ {
+    pɨ total = 0;
+    pay_te (pɨ i = 1; i <= 10; i = i + 1) {
+        yat (i % 2 == 0) {
+            chak;
+        }
+        yat (i > 7) {
+            kati;
+        }
+        total = total + i;
+    }
+    sɔ(total);
+
+    pɨ n = 27;
+    pɨ steps = 0;
+    kʉ_te (n != 1) {
+        yat (n % 2 == 0) {
+            n = n / 2;
+        } rɔ {
+            n = 3 * n + 1;
+        }
+        steps = steps + 1;
+    }
+    sɔ(steps);
+}

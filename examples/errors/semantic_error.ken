@@ -1,0 +1,20 @@
+kʉ add(pɨ a, pɨ b) : pɨ {
+    piti a + b;
+}
+
+kʉ half(pɨ n) : pɨ {
+    yat (n > 0) {
+        piti n / 2;
+    }
+}
+
+kʉ main() : ngwɔ {
+    pɨ total = add(1);
+    pɨ count = 3;
+    sɔ(cuont);
+    bɛyɔŋ name = 42;
+    yat (count) {
+        sɔ("yes");
+    }
+    kati;
+}

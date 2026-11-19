@@ -1,0 +1,9 @@
+// Input: read two whole numbers and print their sum and product
+kʉ main() : ngwɔ {
+    pɨ a;
+    pɨ b;
+    pay(a);
+    pay(b);
+    sɔ(a + b);
+    sɔ(a * b);
+}

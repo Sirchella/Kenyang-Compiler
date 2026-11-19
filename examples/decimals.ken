@@ -1,0 +1,27 @@
+// Decimal numbers: mixing with whole numbers, comparison, negative values, functions
+kʉ average(pɨ a, pɨ b) : pɨ_kati {
+    piti (a + b) / 2.0;
+}
+
+kʉ circle_area(pɨ_kati r) : pɨ_kati {
+    piti 3.14159 * r * r;
+}
+
+kʉ main() : ngwɔ {
+    pɨ_kati x = 1.5;
+    pɨ n = 2;
+    sɔ(x * n + 0.25);
+    sɔ(-x);
+    sɔ(x < n);
+    sɔ(average(7, 10));
+    sɔ(circle_area(2));
+    pɨ_kati total = 0;
+    pay_te (pɨ i = 1; i <= 10; i = i + 1) {
+        total = total + 0.1;
+    }
+    sɔ(total);
+    sɔ(1 / 3.0);
+    sɔ(2.5 - 10);
+    pɨ_kati whole = 7;
+    sɔ(whole);
+}

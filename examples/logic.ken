@@ -1,0 +1,19 @@
+// Logic: and, or, not. The right side is skipped when the left side decides the answer.
+kʉ noisy(bɛyɔŋ label, tɛp answer) : tɛp {
+    sɔ(label);
+    piti answer;
+}
+
+kʉ main() : ngwɔ {
+    yat (noisy("left is false", nse) ne noisy("right of and (never shown)", tɛtɛp)) {
+        sɔ("both true");
+    } rɔ {
+        sɔ("and stopped early");
+    }
+    yat (noisy("left is true", tɛtɛp) kɛ noisy("right of or (never shown)", nse)) {
+        sɔ("or stopped early");
+    }
+    tɛp ok = ka (3 > 5) ne (2 + 2 == 4);
+    sɔ(ok);
+    sɔ(ka ok);
+}

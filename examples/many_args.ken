@@ -1,0 +1,13 @@
+// Calls with more than six arguments (the extra ones travel on the stack)
+kʉ sum7(pɨ a, pɨ b, pɨ c, pɨ d, pɨ e, pɨ f, pɨ g) : pɨ {
+    piti a + 2 * b + 3 * c + 4 * d + 5 * e + 6 * f + 7 * g;
+}
+
+kʉ sum8(pɨ a, pɨ b, pɨ c, pɨ d, pɨ e, pɨ f, pɨ g, pɨ h) : pɨ {
+    piti sum7(a, b, c, d, e, f, g) + 8 * h;
+}
+
+kʉ main() : ngwɔ {
+    sɔ(sum7(1, 2, 3, 4, 5, 6, 7));
+    sɔ(sum8(1, 2, 3, 4, 5, 6, 7, 8));
+}

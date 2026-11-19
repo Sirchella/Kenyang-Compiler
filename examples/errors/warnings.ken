@@ -1,0 +1,10 @@
+// Compiles, but the compiler warns about two careless spots
+kʉ check(pɨ n) : pɨ {
+    pɨ spare = 10;
+    piti n + 1;
+    sɔ("never printed");
+}
+
+kʉ main() : ngwɔ {
+    sɔ(check(1));
+}

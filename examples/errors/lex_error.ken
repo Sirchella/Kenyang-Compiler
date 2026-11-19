@@ -1,0 +1,4 @@
+kʉ main() : ngwɔ {
+    pɨ x = 5 @ 3;
+    sɔ("unfinished);
+}
